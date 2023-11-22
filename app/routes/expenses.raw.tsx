@@ -1,10 +1,6 @@
 import { type LoaderFunction } from "@remix-run/node";
+import { getExpenses } from "~/data/expenses.server";
 
 export const loader: LoaderFunction = () => {
-  return [{
-    id: "1",
-    title: "expense",
-    amount: 18.99,
-    date: new Date().toISOString()
-  }]
+  return getExpenses();
 }
