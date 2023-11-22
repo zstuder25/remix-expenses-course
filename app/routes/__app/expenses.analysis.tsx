@@ -4,9 +4,11 @@ import { json, type LoaderFunction } from "@remix-run/node";
 import { type CatchBoundaryComponent, useCatch, useLoaderData, Link } from "@remix-run/react";
 import { getExpenses } from "~/data/expenses.server";
 import Error from "~/components/util/Error";
+import { requireUserSession } from "~/data/auth.server";
 
-export const loader: LoaderFunction = async () => {
-  const expenses =  await getExpenses();
+export const loader: LoaderFunction = async ({ request }) => {
+  const userId = await requireUserSession(request);
+  const expenses =  await getExpenses(userId);
 
   if(!expenses || expenses.length < 1){
       throw json({ message: "Could not find any expenses."}, {status: 404, statusText: "No expenses yet!"});

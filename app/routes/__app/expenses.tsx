@@ -2,11 +2,14 @@ import { type LoaderFunction } from "@remix-run/node";
 import { Outlet, Link, useLoaderData } from "@remix-run/react";
 import { FaPlus, FaDownload } from "react-icons/fa";
 import ExpensesList from "~/components/expenses/ExpensesList";
+import { requireUserSession } from "~/data/auth.server";
 import { getExpenses } from "~/data/expenses.server";
 
-export const loader: LoaderFunction = async () => {
+export const loader: LoaderFunction = async ({request}) => {
+    const userId = await requireUserSession(request);
+
     // async/await is optional here if we're just returning 
-    const expenses = await getExpenses();
+    const expenses = await getExpenses(userId);
 
     // if(!expenses || expenses.length === 0){
     //     throw json({ message: "Could not find any expenses."}, {status: 404, statusText: "No expenses found"})
